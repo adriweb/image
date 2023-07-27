@@ -141,6 +141,9 @@ class Font extends \Intervention\Image\AbstractFont
         // parse text color
         $color = new Color($this->color);
 
+        // decode if needed
+        $finalText = (strpos($this->text, "&#38;#") !== false) ? html_entity_decode($this->text) : $this->text;
+
         if ($this->hasApplicableFontFile()) {
 
             if ($this->angle != 0 || is_string($this->align) || is_string($this->valign)) {
@@ -207,7 +210,7 @@ class Font extends \Intervention\Image\AbstractFont
             imagealphablending($image->getCore(), true);
 
             // draw ttf text
-            imagettftext($image->getCore(), $this->getPointSize(), $this->angle, $posx, $posy, $color->getInt(), $this->file, $this->text);
+            imagettftext($image->getCore(), $this->getPointSize(), $this->angle, $posx, $posy, $color->getInt(), $this->file, $finalText);
 
         } else {
 
@@ -257,7 +260,7 @@ class Font extends \Intervention\Image\AbstractFont
             }
 
             // draw text
-            imagestring($image->getCore(), $this->getInternalFont(), $posx, $posy, $this->text, $color->getInt());
+            imagestring($image->getCore(), $this->getInternalFont(), $posx, $posy, $finalText, $color->getInt());
         }
     }
 
